@@ -23,7 +23,6 @@ $current_user = $_SESSION['user'];
 <head>
     <title>Followers</title>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="javascript/main.js">
 </head>
 <body>
 
@@ -42,13 +41,20 @@ $current_user = $_SESSION['user'];
             <li><a href="post.php"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
             <li><a href="#"><i class="fas fa-search"></i> <span>Search</span></a></li>
             <li><a href="#"><i class="fa-regular fa-compass"></i> <span>Explore</span></a></li>
-            <li><a href="#"><i class="fa-regular fa-bell"></i> <span>Messages</span></a></li>
+            <li><a href="message.php"><i class="fa-regular fa-bell"></i> <span>Messages</span></a></li>
             <li><a href="#"><i class="fa-regular fa-envelope"></i> <span>Notification</span></a></li>
             <li><a href="#"><i class="fa-regular fa-square-plus"></i> <span>Create</span></a></li>
             <li><a href="profile.php"><i class="fa-regular fa-user"></i> <span>Profile</span></a></li>
             <li class="down"><a href="#"><i class="fas fa-crown"></i><span>Premium</span></a></li>
             <li class="down"><a href="#"><i class="fa fa-bars"></i><span>More</span></a></li>
             <li class="down"><a href="index.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
+            <li class="underPro">
+                <a href="#">
+                    <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="">
+                    <p><?php echo htmlspecialchars($_SESSION['user']); ?></p>
+                    <span>@<?php echo htmlspecialchars($_SESSION['user']); ?></span>
+                </a>
+            </li>
         </ul>
     </nav>
     <div class="rightHeader">
