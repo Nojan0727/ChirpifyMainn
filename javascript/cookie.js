@@ -1,34 +1,31 @@
+function acceptCookies() {
+    console.log("Accept button clicked!");
+    document.cookie = "cookie_consent=accepted; path=/; max-age=" + (24);
+
+
+    if (document.cookie.includes("cookie_consent=accepted")) {
+        console.log("Cookie was set successfully!");
+    } else {
+        console.log("Failed to set cookie.");
+    }
+
+    document.getElementById("cookieBox").style.display = "none";
+    location.reload();
+}
+
+function rejectCookies() {
+    console.log("Reject button clicked!");
+    window.location.href = "https://www.google.com";
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-    const cookieBox = document.getElementById("cookieBox");
-    const cookieOverlay = document.getElementById("cookieOverlay");
-    const acceptButton = document.getElementById("acceptCookies");
-
-    function getCookie(name) {
-        return document.cookie.split("; ").some((cookie) => cookie.startsWith(name + "="));
-    }
-
-    if (getCookie("cookieConsent")) {
-        cookieBox.style.display = "none";
-        cookieOverlay.style.display = "none";
-    }
-
-    acceptButton.addEventListener("click", function () {
-        fetch("cookie.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "acceptCookies=true"
-        })
-            .then(response => response.text())
-            .then(data => {
-                if (data === "success") {
-                    cookieBox.style.display = "none";
-                    cookieOverlay.style.display = "none";
-                }
-            });
-    });
+    console.log("JavaScript Loaded!");
 });
-
 function toggleTerms() {
-    const termsBox = document.getElementById("termsBox");
-    termsBox.style.display = termsBox.style.display === "none" ? "block" : "none";
+    let termsBox = document.getElementById("termsBox");
+    if (termsBox.style.display === "none" || termsBox.style.display === "") {
+        termsBox.style.display = "block";
+    } else {
+        termsBox.style.display = "none";
+    }
 }

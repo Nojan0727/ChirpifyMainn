@@ -9,8 +9,6 @@
     likePost(index, this);
 });
 });
-
-    // Attach event listeners to all repost icons
     document.querySelectorAll('.repost-icon').forEach(icon => {
     icon.addEventListener('click', function () {
     const index = this.getAttribute('data-index');
@@ -80,3 +78,27 @@
             alert('An error occurred while reposting the post.');
         });
 }
+    document.addEventListener('DOMContentLoaded', function () {
+        const triggers = document.querySelectorAll('.commentTrigger');
+        const closeButtons = document.querySelectorAll('.closeComment');
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', function () {
+                const post = this.closest('.post');
+                const detailedForm = post.querySelector('.commentForm[id^="commentform"]');
+                if (detailedForm) {
+                    detailedForm.style.display = 'block';
+                }
+            });
+        });
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const post = this.closest('.post');
+                const detailedForm = post.querySelector('.commentForm[id^="commentform"]');
+                if (detailedForm) {
+                    detailedForm.style.display = 'none';
+                }
+            });
+        });
+    });

@@ -1,34 +1,7 @@
 <?php
-global $conn;
-session_start();
-require"database/database.php";
-
-if (!isset($_SESSION['user'])) {
-    header("Location: index.php");
-    exit();
-}
-
-$stmt = $conn->prepare("SELECT username, bio, profile_picture, age FROM users WHERE username = :username");
-$stmt->execute([':username' => $_SESSION['user']]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($user) {
-    $_SESSION['user'] = $user['username'];
-    $_SESSION['bio'] = $user['bio'] ?? 'No bio yet.';
-    $_SESSION['profile_picture'] = $user['profile_picture'] ?? 'assets/uploads/default.jpg';
-    $_SESSION['age'] = $user['age'];
-}
-
-// Handle post deletion
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePost'])) {
-    $index = (int)$_POST['deletePost'];
-    if (isset($_SESSION['posts'][$index]) && $_SESSION['posts'][$index]['user'] === $_SESSION['user']) {
-        array_splice($_SESSION['posts'], $index, 1);
-    }
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
-}
+require "create_profile.php";
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,8 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePost'])) {
                 <h3>Chirpify</h3></a></li>
     </div>
     <div class="middleHeader">
-        <a href="recommended.php"><button>For You</button></a>
-        <a href="Followers.php"><button>Following</button></a>
+        <a href="recommended.php">
+            <button>For You</button>
+        </a>
+        <a href="Followers.php">
+            <button>Following</button>
+        </a>
     </div>
     <div class="rightHeader">
         <form action="" method="GET">
@@ -75,14 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePost'])) {
 <div class="body">
     <div class="profile">
         <div class="banner">
-            <!-- Asking Kelvin -->
-            <?php
-            echo "Profile picture path: " . htmlspecialchars($_SESSION['profile_picture']) . "<br>";
-            $full_path = $_SERVER['DOCUMENT_ROOT'] . $_SESSION['profile_picture'];
-            echo "Full server path: $full_path<br>";
-            echo "File exists: " . (file_exists($full_path) ? "Yes" : "No") . "<br>";
-            ?>
-            <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="Profile Picture" class="profilePic">
+
+            <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="Profile Picture"
+                 class="profilePic">
         </div>
         <div class="userInfo">
             <div class="username">
@@ -109,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePost'])) {
                     <div class="post">
                         <p class="postContent"><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
                         <?php if (!empty($post['image']) && file_exists($post['image'])): ?>
-                            <img src="<?php echo htmlspecialchars($post['image']); ?>" style="max-width: 500px; border-radius: 15px;" alt="Post Image">
+                            <img src="<?php echo htmlspecialchars($post['image']); ?>"
+                                 style="max-width: 500px; border-radius: 15px;" alt="Post Image">
                         <?php endif; ?>
                         <div class="postActions">
                             <span><i class="fa-regular fa-heart"></i> <?php echo $post['likes'] ?? 0; ?></span>

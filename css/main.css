@@ -3,6 +3,14 @@
     padding: 0;
     box-sizing: border-box;
 }
+.videoBackground {
+    position: fixed;
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
 
 body {
     font-family: Arial, Helvetica, sans-serif;
@@ -151,11 +159,16 @@ nav ul li a {
 nav ul li a:hover {
     text-decoration: underline;
 }
-
+.cont{
+    position: relative;
+    top: -1em; left: 13em;
+    border-radius: 10px;
+    text-align: center;
+    width: 650px;
+}
 .container {
     position: relative;
-    top: 60px; left: 50em;
-    background-color: black;
+    top: 60px; left: 35em;
     box-shadow:0 0 1em 0.1em  rgba(255, 255, 255, 0.2);
     padding: 20px;
     border-radius: 8px;
@@ -1130,4 +1143,260 @@ p a:hover {
 
 .deleteBtn:hover {
     color: #d11a25;
+}
+.commentBlock {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.commentTrigger, .closeComment {
+    cursor: pointer;
+}
+
+.commentForm {
+    margin-top: 10px;
+}
+
+.commentForm input[type="text"], .commentForm textarea {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+    width: 200px;
+}
+
+.commentForm button {
+    padding: 5px 10px;
+    background-color: blue;
+    color: black;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.comment {
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 1px solid black;
+}
+
+.commentProfile {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.commentPro {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: black;
+}
+
+.commentPro img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.commentPro textarea {
+    width: 300px;
+    height: 60px;
+}
+.messagePage {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.chatSidebar {
+    width: 250px;
+    background: #1e1e1e;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.userList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chatUser {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    text-decoration: none;
+    color: white;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.chatUser:hover {
+    background: #2b2b2b;
+}
+
+.chatUser img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chatArea {
+    flex: 1;
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 1em;
+    min-height: 40px;
+    flex-direction: column;
+}
+
+.chatHeader {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 10px;
+}
+
+.chatBox {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.chatMessage {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    line-height: 1.4;
+}
+
+.chatMessage.sent {
+    align-self: flex-end;
+    background-color: #15696f;
+    color: white;
+}
+
+.chatMessage.received {
+    align-self: flex-start;
+    background-color: #282828;
+    color: white;
+}
+
+.chatForm {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.chatForm input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #333;
+    color: white;
+}
+
+.chatForm button {
+    background: #63BDB5;
+    color: #000;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.selectUserMsg {
+    padding: 1em;
+    font-size: 1em;
+    color: #888;
+}
+.policy-page {
+    width: 80%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Enable scrolling if content overflows */
+    height: 80vh; /* Limit the height to 80% of viewport height */
+}
+
+/* Header Styling */
+.policy-header h1 {
+    font-size: 2.2em;
+    color: #15696F;
+    margin-bottom: 15px;
+}
+
+.policy-header .policy-description {
+    font-size: 1.1em;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Policy Sections */
+.policy-content {
+    margin-top: 30px;
+    padding-right: 10px;
+}
+
+.policy-section {
+    margin-bottom: 35px;
+}
+
+.policy-section h2 {
+    font-size: 1.6em;
+    color: #15696F;
+    margin-bottom: 12px;
+}
+
+.policy-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+.policy-section ul li {
+    font-size: 1.1em;
+    color: black;
+}
+.cookie-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.cookie-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 45%;
+}
+
+.accept-btn {
+    background-color: #63BDB5;
+    color: #fff;
+}
+
+.accept-btn:hover {
+    background-color: #15696F;
+}
+
+.reject-btn {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.reject-btn:hover {
+    background-color: #d32f2f;
 }
