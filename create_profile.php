@@ -3,29 +3,56 @@ global $conn;
 session_start();
 require "database/database.php";
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']) || !isset($_SESSION['id'])) {
     header("Location: index.php");
     exit();
 }
 
-$stmt = $conn->prepare("SELECT username, bio, profile_picture, age FROM users WHERE username = :username");
+// user details
+$stmt = $conn->prepare("SELECT id, username, bio, profile_picture, age FROM users WHERE username = :username");
 $stmt->execute([':username' => $_SESSION['user']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($user) {
+    $_SESSION['id'] = $user['id'];
     $_SESSION['user'] = $user['username'];
     $_SESSION['bio'] = $user['bio'] ?? 'No bio yet.';
     $_SESSION['profile_picture'] = $user['profile_picture'] ?? 'assets/uploads/default.jpg';
     $_SESSION['age'] = $user['age'];
 }
 
-// Handle post deletion
+// posts from the database for the current user
+$stmt = $conn->prepare("SELECT posts.*, users.username, users.profile_picture 
+                        FROM posts 
+                        JOIN users ON posts.user_id = users.id 
+                        WHERE posts.user_id = :user_id 
+                        ORDER BY posts.post_created_at DESC");
+$stmt->execute([':user_id' => $_SESSION['id']]);
+$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Handle post
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePost'])) {
-    $index = (int)$_POST['deletePost'];
-    if (isset($_SESSION['posts'][$index]) && $_SESSION['posts'][$index]['user'] === $_SESSION['user']) {
-        array_splice($_SESSION['posts'], $index, 1);
+    $post_id = (int)$_POST['deletePost'];
+
+    // Verify the post belongs to the current user before deleting
+    $stmt = $conn->prepare("SELECT user_id FROM posts WHERE id = :post_id");
+    $stmt->execute([':post_id' => $post_id]);
+    $post = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($post && $post['user_id'] == $_SESSION['id']) {
+        try {
+            // Delete associated comments and likes first
+            $stmt = $conn->prepare("DELETE FROM posts WHERE id = :post_id");
+            $stmt->execute([':post_id' => $post_id]);
+            header("Location: profile.php");
+            exit();
+        } catch (PDOException $e) {
+            $error = "Error deleting post: " . $e->getMessage();
+        }
     }
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
 }
 ?>
+
+<?php if (isset($error)): ?>
+    <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+<?php endif; ?>

@@ -1,140 +1,129 @@
 <?php
-global $conn;
 session_start();
 require "database/database.php";
-if (!isset($_SESSION['user'])) {
+
+if (!isset($_SESSION['user']) || !isset($_SESSION['id'])) {
     header("Location: index.php");
     exit();
 }
+
 $upload_dir = "assets/uploads/";
 if (!is_dir($upload_dir)) {
     mkdir($upload_dir, 0777, true);
 }
-if (!isset($_SESSION['posts'])) {
-    $_SESSION['posts'] = [];
-}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['content'])) {
-    $content = trim($_POST['content']);
+// === create post ===
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_post']) && !empty($_POST['post_text'])) {
+    $post_text = trim($_POST['post_text']);
     $image_path = "";
 
     if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $file_name = $upload_dir . basename($_FILES['image']['name']);
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $file_name)) {
-            $image_path = $file_name;
+        $file_name = uniqid('post_', true) . '.' . strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+        $target_path = $upload_dir . $file_name;
+
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $target_path)) {
+            $image_path = $target_path;
+        } else {
+            $error = "Error uploading image.";
         }
     }
-    $post_id = time() . "_" . count($_SESSION['posts']);
-    $_SESSION['posts'][] = [
-        'post_id' => $post_id,
-        'user' => $_SESSION['user'],
-        'content' => $content,
-        'profile_picture' => $_SESSION['profile_picture'],
-        'image' => $image_path,
-        'likes' => 0,
-        'reposts' => 0
-    ];
-    header("Location: " . $_SERVER['PHP_SELF']);
+
+    if (!isset($error)) {
+        try {
+            $sql = "INSERT INTO posts (user_id, post_text, images) VALUES (:user_id, :post_text, :images)";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                ':user_id' => $_SESSION['id'],
+                ':post_text' => $post_text,
+                ':images' => $image_path
+            ]);
+            header("Location: post.php");
+            exit();
+        } catch (PDOException $e) {
+            $error = "Error creating post: " . $e->getMessage();
+        }
+    }
+}
+
+// === comment ===
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_comment'], $_POST['post_id'], $_POST['comment_text'])) {
+    $comment_posted_at = date('Y-m-d H:i:s');
+    try {
+        $sql = "INSERT INTO comments (comment_text, post_id, user_id, comment_posted_at)
+                VALUES (:comment_text, :post_id, :user_id, :comment_posted_at)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':comment_text' => $_POST['comment_text'],
+            ':post_id' => $_POST['post_id'],
+            ':user_id' => $_SESSION['id'],
+            ':comment_posted_at' => $comment_posted_at
+        ]);
+        header("Location: post.php");
+        exit();
+    } catch (PDOException $e) {
+        $error = "Error posting comment: " . $e->getMessage();
+    }
+}
+
+// === likes ===
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_post'], $_POST['post_id'])) {
+    $post_id = (int)$_POST['post_id'];
+    $user_id = $_SESSION['id'];
+
+    $stmt = $conn->prepare("SELECT id FROM posts WHERE id = :post_id");
+    $stmt->execute([':post_id' => $post_id]);
+    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+        $error = "Invalid post ID.";
+        header("Location: post.php");
+        exit();
+    }
+
+    $stmt = $conn->prepare("SELECT id FROM users WHERE id = :user_id");
+    $stmt->execute([':user_id' => $user_id]);
+    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+        $error = "Invalid user ID.";
+        header("Location: post.php");
+        exit();
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM likes WHERE user_id = :user_id AND post_id = :post_id");
+    $stmt->execute([':user_id' => $user_id, ':post_id' => $post_id]);
+    $like = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($like) {
+        try {
+            $stmt = $conn->prepare("DELETE FROM likes WHERE user_id = :user_id AND post_id = :post_id");
+            $stmt->execute([':user_id' => $user_id, ':post_id' => $post_id]);
+        } catch (PDOException $e) {
+            $error = "Error unliking post: " . $e->getMessage();
+        }
+    } else {
+        try {
+            $sql = "INSERT INTO likes (user_id, post_id, created_date) VALUES (:user_id, :post_id, NOW())";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([':user_id' => $user_id, ':post_id' => $post_id]);
+        } catch (PDOException $e) {
+            $error = "Error liking post: " . $e->getMessage();
+        }
+    }
+    header("Location: post.php");
     exit();
 }
-?>
 
-<?php
+// === POSTS ===
+$stmt = $conn->prepare("SELECT posts.*, users.username, users.profile_picture 
+                        FROM posts 
+                        JOIN users ON posts.user_id = users.id 
+                        ORDER BY posts.post_created_at DESC");
+$stmt->execute();
+$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// === USER SEARCH FEATURE ===
+$search_results = [];
 if ($_SERVER["REQUEST_METHOD"] == "GET" && !empty($_GET['search'])) {
     $search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS);
-    $stmt = $conn->prepare("SELECT username, profile_picture FROM users WHERE username LIKE :search ORDER BY username DESC");
+    $stmt = $conn->prepare("SELECT username, profile_picture FROM users WHERE username LIKE :search ORDER BY username ASC");
     $stmt->execute([':search' => "%$search%"]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if (empty($results)) {
-        echo "<p class='searchQuery'>No user found with the name <strong>" . htmlspecialchars($search) . "</strong></p>";
-    } else {
-        foreach ($results as $result) {
-            echo "<div class='searchResult'>";
-            echo "<img class='postImg' src='" . htmlspecialchars($result['profile_picture']) . "' alt='Profile Picture'>";
-            echo "<strong>" . htmlspecialchars($result['username']) . "</strong>";
-            echo "<span>@" . htmlspecialchars($result['username']) . "</span>";
-            echo "</div>";
-        }
-    }
-}
-?>
-
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_comment']) && isset($_POST['post_id']) && $_POST['post_id'] === $post['post_id']) {
-    $comment_posted_at = date('Y-m-d H:i:s');
-    $sql = "INSERT INTO comments (comment_text, post_id, user_id, comment_posted_at)
-                                VALUES (:comment_text, :post_id, :user_id, :comment_posted_at)";
-    $binding = $conn->prepare($sql);
-    $binding->bindParam(':comment_text', $_POST['comment_text']);
-    $binding->bindParam(':post_id', $_POST['post_id']);
-    $binding->bindParam(':user_id', $_SESSION['id']);
-    $binding->bindParam(':comment_posted_at', $comment_posted_at);
-    $binding->execute();
-
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
-
-$sql = "SELECT comments.*, users.id AS user_id, users.profile_picture AS profile_picture " .
-    "FROM comments " .
-    "JOIN users ON comments.user_id = users.id " .
-    "WHERE comments.post_id = :post_id " .
-    "ORDER BY comment_posted_at ASC";
-
-$binding = $conn->prepare($sql);
-$binding->bindParam(':post_id', $post['post_id']);
-$binding->execute();
-$comments = $binding->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($comments as $comment) {
-    echo "<div class='comment'>";
-    echo '<img class="commentProfile" src="' . htmlspecialchars($comment["profile_picture"]) . '" alt="">';
-    echo '<strong>' . htmlspecialchars($comment["user_id"]) . '</strong>';
-    echo "<span>@" . htmlspecialchars($comment['user_id']) . "</span>";
-    if ($post['user'] === $comment['user_id']) { // Changed to compare usernames
-        echo '<div class="admin">Creator</div>';
-    }
-    echo "<p>" . htmlspecialchars($comment['comment_text']) . "</p>";
-    echo "</div>";
-}
-?>
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_comment']) && isset($_POST['post_id']) && $_POST['post_id'] === $post['post_id']) {
-    $comment_posted_at = date('Y-m-d H:i:s');
-    $sql = "INSERT INTO comments (comment_text, post_id, user_id, comment_posted_at)
-                                VALUES (:comment_text, :post_id, :user_id, :comment_posted_at)";
-    $binding = $conn->prepare($sql);
-    $binding->bindParam(':comment_text', $_POST['comment_text']);
-    $binding->bindParam(':post_id', $_POST['post_id']);
-    $binding->bindParam(':user_id', $_SESSION['id']);
-    $binding->bindParam(':comment_posted_at', $comment_posted_at);
-    $binding->execute();
-
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
-
-$sql = "SELECT comments.*, users.id AS user_id, users.profile_picture AS profile_picture " .
-    "FROM comments " .
-    "JOIN users ON comments.user_id = users.id " .
-    "WHERE comments.post_id = :post_id " .
-    "ORDER BY comment_posted_at ASC";
-
-$binding = $conn->prepare($sql);
-$binding->bindParam(':post_id', $post['post_id']);
-$binding->execute();
-$comments = $binding->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($comments as $comment) {
-    echo "<div class='comment'>";
-    echo '<img class="commentProfile" src="' . htmlspecialchars($comment["profile_picture"]) . '" alt="">';
-    echo '<strong>' . htmlspecialchars($comment["user_id"]) . '</strong>';
-    echo "<span>@" . htmlspecialchars($comment['user_id']) . "</span>";
-    if ($post['user'] === $comment['user_id']) { // Changed to compare usernames
-        echo '<div class="admin">Creator</div>';
-    }
-    echo "<p>" . htmlspecialchars($comment['comment_text']) . "</p>";
-    echo "</div>";
+    $search_results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
