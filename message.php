@@ -1,47 +1,39 @@
 <?php
-global $conn;
-session_start();
-require("database/database.php");
-
-if (!isset($_SESSION['user'])) {
-    header("Location: index.php");
-    exit();
-}
-
-$current_user = $_SESSION['user'];
-$recipient = $_GET['user'] ?? null;
-
-// Get users from DB (excluding self)
-$stmt = $conn->prepare("SELECT username, profile_picture FROM users WHERE username != :current_user");
-$stmt->bindParam(':current_user', $current_user);
-$stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+require"create_messages.php";
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Messages</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Chirpify</title>
     <link rel="stylesheet" href="css/main.css">
+    <script defer src="javascript/main.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="header">
     <div class="leftHeader">
-        <li><a href="profile.php"><h3>Chirpify</h3></a></li>
+        <li><a href="#"><img class="chirpifyLogo" src="Image/Chripify.png" alt=""> <h3>Chirpify</h3></a></li>
     </div>
     <div class="middleHeader">
-        <a href="recommended.php"><button>For You</button></a>
-        <a href="followers.php"><button>Following</button></a>
+        <form action="recommended.php" method="GET" style="display: inline;">
+            <button type="submit" name="type" value="">For You</button>
+        </form>
+        <form action="followers.php" method="GET" style="display: inline;">
+            <button type="submit" name="type" value="">Following</button>
+        </form>
     </div>
     <div class="rightHeader">
-        <form action="" method="GET">
+        <form action="post.php" method="GET">
             <label>
-                <input type="text" name="query" style="color: white;" placeholder="Looking for something?">
+                <input type="text" name="search" style="" placeholder="Looking for something?">
             </label>
             <button class="searchButton" type="submit">Search</button>
         </form>
     </div>
 </div>
-
 <nav class="navBar">
     <ul>
         <li><a href="post.php"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
@@ -53,65 +45,78 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li><a href="profile.php"><i class="fa-regular fa-user"></i> <span>Profile</span></a></li>
         <li class="down"><a href="#"><i class="fas fa-crown"></i><span>Premium</span></a></li>
         <li class="down"><a href="#"><i class="fa fa-bars"></i><span>More</span></a></li>
-        <li class="down"><a href="index.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
+        <li class="down"><a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
         <li class="underPro">
             <a href="#">
-                <img src="<?= htmlspecialchars($_SESSION['profile_picture']) ?>" alt="">
-                <p><?= htmlspecialchars($_SESSION['user']) ?></p>
-                <span>@<?= htmlspecialchars($_SESSION['user']) ?></span>
+                <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="">
+                <p><?php echo htmlspecialchars($_SESSION['user']); ?></p>
+                <span>@<?php echo htmlspecialchars($_SESSION['user']); ?></span>
             </a>
         </li>
     </ul>
 </nav>
-
 <div class="body">
-    <div class="messagePage">
-        <div class="chatSidebar">
-            <h4>Users</h4>
-            <ul class="userList">
-                <?php foreach ($users as $user): ?>
-                    <li>
-                        <a class="chatUser" href="message.php?user=<?= htmlspecialchars($user['username']) ?>">
-                            <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="">
-                            <div>
-                                <strong><?= htmlspecialchars($user['username']) ?></strong>
-                                <span>@<?= htmlspecialchars($user['username']) ?></span>
-                            </div>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+    <div class="messageContainer">
+        <div class="userList">
+            <h2>Messages</h2>
+            <?php foreach ($users as $user): ?>
+                <div class="userItem messageTrigger" data-user-id="<?php echo $user['id']; ?>">
+                    <img src="<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Picture">
+                    <span>@<?php echo htmlspecialchars($user['username']); ?></span>
+                </div>
+            <?php endforeach; ?>
         </div>
-
         <div class="chatArea">
-            <?php if ($recipient): ?>
+            <?php if ($selected_user_id): ?>
                 <div class="chatHeader">
-                    <h3>Chat with @<?= htmlspecialchars($recipient) ?></h3>
+                    <?php
+                    $stmt = $conn->prepare("SELECT username, profile_picture FROM users WHERE id = :user_id");
+                    $stmt->execute([':user_id' => $selected_user_id]);
+                    $selected_user = $stmt->fetch(PDO::FETCH_ASSOC);
+                    ?>
+                    <img src="<?php echo htmlspecialchars($selected_user['profile_picture']); ?>" alt="Profile Picture">
+                    <h3><?php echo htmlspecialchars($selected_user['username']); ?></h3>
                 </div>
-                <div class="chatBox">
-                    <!-- Dummy messages -->
-                    <div class="chatMessage received"><p>Damn, you nail it!</p></div>
-                    <div class="chatMessage sent"><p>Yeee!</p></div>
+                <div class="messages">
+                    <?php if (!empty($messages)): ?>
+                        <?php foreach ($messages as $message): ?>
+                            <div class="message <?php echo $message['sender_id'] == $_SESSION['id'] ? 'sent' : 'received'; ?>">
+                                <img src="<?php echo htmlspecialchars($message['profile_picture']); ?>" alt="Profile Picture">
+                                <div class="messageContent">
+                                    <p><?php echo htmlspecialchars($message['message_text']); ?></p>
+                                    <small><?php echo $message['sent_at']; ?></small>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No messages yet. Start the conversation!</p>
+                    <?php endif; ?>
                 </div>
-                <form method="POST" class="chatForm">
-                    <input type="hidden" name="to_user" value="<?= htmlspecialchars($recipient) ?>">
-                    <input type="text" name="message_text" placeholder="Write a message..." required>
-                    <button type="submit" name="send_message">Send</button>
-                </form>
-            <?php else: ?>
-                <p class="selectUserMsg">Please select a user to start chatting.</p>
+
+            <?php endif; ?>
+            <?php if (isset($error)): ?>
+                <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
             <?php endif; ?>
         </div>
     </div>
 </div>
 
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
-    $to_user = $_POST['to_user'];
-    $message = trim($_POST['message_text']);
-    echo "<script>alert('Message sent to @$to_user!'); window.location.href='message.php?user=$to_user';</script>";
-    exit;
-}
-?>
+<!-- Message Pop up -->
+<div id="messagePopup" class="messagePopup">
+    <div class="messagePopupContent">
+        <span class="closeMessagePopup"><i class="fa-solid fa-x"></i></span>
+        <form action="" class="messageForm" method="POST">
+            <label class="messagePro">
+                <img src="<?php echo htmlspecialchars($_SESSION["profile_picture"]); ?>" alt="">
+                <strong><?php echo htmlspecialchars($_SESSION["user"]); ?></strong>
+                <span>@<?php echo htmlspecialchars($_SESSION["user"]); ?></span>
+                <textarea name="message_text" placeholder="Type a message..." required></textarea>
+            </label>
+            <input type="hidden" name="recipient_id" id="messageRecipientId">
+            <button name="send_message">Send</button>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>

@@ -24,7 +24,7 @@ require "create_register.php";
         <label for="password">Password:</label>
         <input type="password" name="password" id="password" required>
         <label for="age">Age:</label>
-        <input type="number" name="age" id="age" required>
+        <input type="number" name="age" id="age" required min="18">
         <label for="bio">Bio:</label>
         <input type="text" name="bio" id="bio" required>
         <input type="submit" name="submit" value="Register">

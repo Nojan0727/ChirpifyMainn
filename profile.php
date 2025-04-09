@@ -1,4 +1,5 @@
 <?php
+global $conn;
 require "create_profile.php";
 ?>
 
@@ -22,7 +23,7 @@ require "create_profile.php";
         <a href="recommended.php">
             <button>For You</button>
         </a>
-        <a href="Followers.php">
+        <a href="followers.php">
             <button>Following</button>
         </a>
     </div>
@@ -40,19 +41,18 @@ require "create_profile.php";
         <li><a href="post.php"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
         <li><a href="#"><i class="fas fa-search"></i> <span>Search</span></a></li>
         <li><a href="#"><i class="fa-regular fa-compass"></i> <span>Explore</span></a></li>
-        <li><a href="#"><i class="fa-regular fa-bell"></i> <span>Messages</span></a></li>
+        <li><a href="message.php"><i class="fa-regular fa-bell"></i> <span>Messages</span></a></li>
         <li><a href="#"><i class="fa-regular fa-envelope"></i> <span>Notification</span></a></li>
         <li><a href="#"><i class="fa-regular fa-square-plus"></i> <span>Create</span></a></li>
         <li><a href="profile.php"><i class="fa-regular fa-user"></i> <span>Profile</span></a></li>
         <li class="down"><a href="#"><i class="fas fa-crown"></i><span>Premium</span></a></li>
         <li class="down"><a href="#"><i class="fa fa-bars"></i><span>More</span></a></li>
-        <li class="down"><a href="index.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
+        <li class="down"><a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
     </ul>
 </nav>
 <div class="body">
     <div class="profile">
         <div class="banner">
-
             <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="Profile Picture"
                  class="profilePic">
         </div>
@@ -75,28 +75,31 @@ require "create_profile.php";
             <button class="buttonTab">Likes</button>
         </div>
         <div class="posts">
-            <?php $posts = $_SESSION['posts'] ?? []; ?>
-            <?php foreach ($posts as $index => $post): ?>
-                <?php if ($post['user'] === $_SESSION['user']): ?>
+            <?php if (!empty($posts)): ?>
+                <?php foreach ($posts as $post): ?>
                     <div class="post">
-                        <p class="postContent"><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
-                        <?php if (!empty($post['image']) && file_exists($post['image'])): ?>
-                            <img src="<?php echo htmlspecialchars($post['image']); ?>"
+                        <p class="postContent"><?php echo nl2br(htmlspecialchars($post['post_text'])); ?></p>
+                        <?php if (!empty($post['images']) && file_exists($post['images'])): ?>
+                            <img src="<?php echo htmlspecialchars($post['images']); ?>"
                                  style="max-width: 500px; border-radius: 15px;" alt="Post Image">
                         <?php endif; ?>
+                        <small>Posted on: <?php echo $post['post_created_at']; ?></small>
                         <div class="postActions">
-                            <span><i class="fa-regular fa-heart"></i> <?php echo $post['likes'] ?? 0; ?></span>
-                            <span><i class="fa-solid fa-retweet"></i> <?php echo $post['reposts'] ?? 0; ?></span>
-                            <form action="" method="post" style="display:inline;">
-                                <button class="deleteBtn" type="submit" name="deletePost" value="<?php echo $index; ?>">
+                            <?php
+                            $stmt = $conn->prepare("SELECT COUNT(*) as like_count FROM likes WHERE post_id = :post_id");
+                            $stmt->execute([':post_id' => $post['id']]);
+                            $like_count = $stmt->fetch(PDO::FETCH_ASSOC)['like_count'];
+                            ?>
+                            <span><i class="fa-regular fa-heart"></i> <?php echo $like_count; ?></span>
+                            <form action="" method="POST" style="display:inline;">
+                                <button class="deleteBtn" type="submit" name="deletePost" value="<?php echo $post['id']; ?>">
                                     <i class="fa-solid fa-trash-alt"></i>
                                 </button>
                             </form>
                         </div>
                     </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
-            <?php if (empty(array_filter($posts, fn($p) => $p['user'] === $_SESSION['user']))): ?>
+                <?php endforeach; ?>
+            <?php else: ?>
                 <p class="post">No posts yet.</p>
             <?php endif; ?>
         </div>
