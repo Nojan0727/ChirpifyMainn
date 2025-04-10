@@ -77,7 +77,7 @@ session_start();
         </section>
     </div>
 
-    <div class="cookie-actions">
+    <div class="cookie-actions" id="cookieBox">
         <button class="accept-btn" onclick="acceptCookies()">Accept</button>
         <button class="reject-btn" onclick="rejectCookies()">Reject</button>
     </div>

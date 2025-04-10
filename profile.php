@@ -50,7 +50,7 @@ require "create_profile.php";
         <li class="down"><a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
     </ul>
 </nav>
-<div class="body">
+<div class="mid">
     <div class="profile">
         <div class="banner">
             <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="Profile Picture"
@@ -69,7 +69,8 @@ require "create_profile.php";
             <button class="editBtn">Edit Profile</button>
         </div>
         <div class="tabs">
-            <button class="buttonTab active">Posts</button>
+            <button class="buttonTab active">Posts
+                <link rel="stylesheet" href="construction.php"></button>
             <button class="buttonTab">Replies</button>
             <button class="buttonTab">Media</button>
             <button class="buttonTab">Likes</button>

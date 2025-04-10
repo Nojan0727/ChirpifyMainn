@@ -55,7 +55,7 @@ require "create_post.php";
         </li>
     </ul>
 </nav>
-<div class="body">
+<div class="mid">
     <div class="happening">
         <?php if (isset($error)): ?>
             <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>

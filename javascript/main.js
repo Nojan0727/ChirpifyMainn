@@ -68,7 +68,6 @@ window.onload = function() {
             messageRecipientId.value = userId;
             messagePopup.style.display = 'block';
             window.history.pushState({}, '', 'message.php?user_id=' + userId);
-            location.reload();
         };
     }
 
