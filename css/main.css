@@ -17,6 +17,7 @@
 }
 
 body {
+    position: fixed;
     font-family: Arial, Helvetica, sans-serif;
     background-color: black;
     background-size: cover;
@@ -154,10 +155,9 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 .cont{
-    font-family: Orbitron, sans-serif;
+    font-family: 'Orbitron', sans-serif;
     position: relative;
     top: 0.5em;
-    left: 0.2em;
     text-align: center;
     width: 100%;
     max-width: 150%;
@@ -170,6 +170,7 @@ nav ul li a:hover {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
+
 }
 .container {
     position: relative;
@@ -436,7 +437,6 @@ p a:hover {
     font-size: 14px;
 }
 .searchButton{
-    position: relative;
     top: -60px;
     width: 60px;
     left: 375px;
@@ -620,26 +620,17 @@ p a:hover {
     background-color: rgb(255, 255, 255);
 }
 
-.likes {
-    position: relative;
-    left: 50px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    cursor: pointer;
-}
-.like {
-    padding-right: 10px;
-}
-.like i:hover{
+
+
+.like-icon.liked {
     color: red;
 }
 .repost i:hover{
     color: rgb(0, 128, 255);
 }
 
-
 .names img {
-    position: relative;
+    margin-left: 5px;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -661,7 +652,7 @@ p a:hover {
 .searchResult {
     width: 100px;
     position: relative;
-    left: 10px;  top: 20px;
+    left: 10px;
     margin-bottom: 20px;
     cursor: pointer;
 
@@ -877,10 +868,7 @@ p a:hover {
 }
 
 .post  {
-    position: relative;
-    left: 10px;  top: 20px;
-    border-bottom: 1px solid rgb(70, 70, 70);
-    width: 550px;
+    left: auto;  top: auto;
     margin-bottom: 20px;
 
 }
@@ -912,9 +900,7 @@ p a:hover {
     cursor: pointer;
 }
 
-.like-icon.liked {
-    color: white;
-}
+
 
 .repost-icon.reposted {
     color: white;
@@ -1114,10 +1100,6 @@ p a:hover {
     padding: 0 20px;
 }
 
-.post {
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
-}
 
 .postContent {
     font-size: 15px;
@@ -1623,4 +1605,17 @@ p a:hover {
 
 .messageForm button:hover {
     background-color: #0d95e8;
+}
+.date{
+    margin-top: 10px;
+    display: flex;
+    font-size: 0.85em;
+    color: #2a7ae2;
+}
+.heartTrash{
+    display: table-row;
+    align-items: center;
+}
+.postImg{
+    margin-top: 10px;
 }

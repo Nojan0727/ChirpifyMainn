@@ -83,19 +83,20 @@ require "create_profile.php";
                             <img src="<?php echo htmlspecialchars($post['images']); ?>"
                                  style="max-width: 500px; border-radius: 15px;" alt="Post Image">
                         <?php endif; ?>
-                        <small>Posted on: <?php echo $post['post_created_at']; ?></small>
+                        <small class="date">Posted on: <?php echo date('M j, Y', strtotime($post['post_created_at'])); ?></small>
                         <div class="postActions">
                             <?php
                             $stmt = $conn->prepare("SELECT COUNT(*) as like_count FROM likes WHERE post_id = :post_id");
                             $stmt->execute([':post_id' => $post['id']]);
                             $like_count = $stmt->fetch(PDO::FETCH_ASSOC)['like_count'];
                             ?>
-                            <span><i class="fa-regular fa-heart"></i> <?php echo $like_count; ?></span>
+                            <span class="heartTrash"><i class="fa-regular fa-heart"></i> <?php echo $like_count; ?>
                             <form action="" method="POST" style="display:inline;">
                                 <button class="deleteBtn" type="submit" name="deletePost" value="<?php echo $post['id']; ?>">
                                     <i class="fa-solid fa-trash-alt"></i>
                                 </button>
                             </form>
+                            </span>
                         </div>
                     </div>
                 <?php endforeach; ?>
