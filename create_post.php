@@ -3,8 +3,10 @@ session_start();
 require "database/database.php";
 
 if (!isset($_SESSION['user']) || !isset($_SESSION['id'])) {
-    header("Location: index.php");
-    exit();
+    if (basename($_SERVER['PHP_SELF']) !== 'index.php') {
+        header("Location: index.php");
+        exit();
+    }
 }
 
 $upload_dir = "assets/uploads/";
@@ -78,14 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_post'], $_POST['
         exit();
     }
 
-    $stmt = $conn->prepare("SELECT id FROM users WHERE id = :user_id");
-    $stmt->execute([':user_id' => $user_id]);
-    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
-        $error = "Invalid user ID.";
-        header("Location: post.php");
-        exit();
-    }
-
     $stmt = $conn->prepare("SELECT * FROM likes WHERE user_id = :user_id AND post_id = :post_id");
     $stmt->execute([':user_id' => $user_id, ':post_id' => $post_id]);
     $like = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -110,13 +104,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_post'], $_POST['
     exit();
 }
 
-// === POSTS ===
+// === retrieve posts ===
 $stmt = $conn->prepare("SELECT posts.*, users.username, users.profile_picture 
-                        FROM posts 
-                        JOIN users ON posts.user_id = users.id 
-                        ORDER BY posts.post_created_at DESC");
+  FROM posts 
+  JOIN users ON posts.user_id = users.id 
+  ORDER BY posts.post_created_at DESC");
 $stmt->execute();
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// === retrieve comments ===
+$comments_by_post = [];
+if (!empty($posts)) {
+    $post_ids = array_column($posts, 'id');
+    $in_placeholders = implode(',', array_fill(0, count($post_ids), '?'));
+
+    $stmt = $conn->prepare("SELECT comments.*, users.username 
+                            FROM comments 
+                            JOIN users ON comments.user_id = users.id 
+                            WHERE comments.post_id IN ($in_placeholders)
+                            ORDER BY comments.comment_posted_at ASC");
+    $stmt->execute($post_ids);
+    $all_comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($all_comments as $comment) {
+        $comments_by_post[$comment['post_id']][] = $comment;
+    }
+}
 
 // === USER SEARCH FEATURE ===
 $search_results = [];

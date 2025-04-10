@@ -1,4 +1,5 @@
 <?php
+global $users, $conn, $selected_user_id;
 require"create_messages.php";
 ?>
 
@@ -55,7 +56,7 @@ require"create_messages.php";
         </li>
     </ul>
 </nav>
-<div class="body">
+<div class="mid">
     <div class="messageContainer">
         <div class="userList">
             <h2>Messages</h2>

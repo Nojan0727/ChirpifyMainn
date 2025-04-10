@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require("database/database.php");
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']) && basename($_SERVER['PHP_SELF']) !== 'index.php') {
     header("Location: index.php");
     exit();
 }
@@ -17,4 +17,4 @@ if (!empty($_SESSION['posts'])) {
         }
     }
 }
-?><?php
+?>

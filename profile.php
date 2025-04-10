@@ -50,7 +50,7 @@ require "create_profile.php";
         <li class="down"><a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
     </ul>
 </nav>
-<div class="body">
+<div class="mid">
     <div class="profile">
         <div class="banner">
             <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="Profile Picture"

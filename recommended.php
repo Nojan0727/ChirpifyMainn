@@ -69,7 +69,7 @@ require("create_recommended.php");
     </div>
 </div>
 
-<div class="body">
+<div class="mid">
     <div class="happening">
         <h3 class="recentPost">Recommended Posts</h3>
 

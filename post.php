@@ -1,6 +1,7 @@
 <?php
 global $conn;
 require "create_post.php";
+file_put_contents('debug.log', "Accessing " . basename($_SERVER['PHP_SELF']) . " at " . date('Y-m-d H:i:s') . " with session user: " . ($_SESSION['user'] ?? 'none') . "\n", FILE_APPEND);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -55,7 +56,7 @@ require "create_post.php";
         </li>
     </ul>
 </nav>
-<div class="body">
+<div class="mid">
     <div class="happening">
         <?php if (isset($error)): ?>
             <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
@@ -119,15 +120,18 @@ require "create_post.php";
                             </form>
                         </span>
                         <span class="commentBlock">
-                            <span class="commentTrigger" data-post-id="<?php echo $post['id']; ?>"><i class="fa-solid fa-comment"></i></span>
-                        </span>
+    <span class="commentTrigger" data-post-id="<?php echo $post['id']; ?>">
+        <i class="fa-solid fa-comment"></i>
+    </span>
+</span>
                     </p>
+
                     <?php
                     $stmt = $conn->prepare("SELECT comments.*, users.username, users.profile_picture
-                                            FROM comments
-                                            JOIN users ON comments.user_id = users.id
-                                            WHERE comments.post_id = :post_id
-                                            ORDER BY comment_posted_at ASC");
+                        FROM comments
+                        JOIN users ON comments.user_id = users.id
+                        WHERE comments.post_id = :post_id
+                        ORDER BY comment_posted_at ASC");
                     $stmt->execute([':post_id' => $post['id']]);
                     $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     ?>
@@ -145,29 +149,30 @@ require "create_post.php";
                             </div>
                         <?php endforeach; ?>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="post">No posts yet.</p>
-        <?php endif; ?>
-    </div>
-</div>
 
-<div id="commentPopup" class="commentPopup">
-    <div class="commentPopupContent">
-        <span class="closePopup"><i class="fa-solid fa-x"></i></span>
-        <form action="" class="commentForm" method="POST">
-            <label class="commentPro">
-                <img src="<?php echo htmlspecialchars($_SESSION["profile_picture"]); ?>" alt="">
-                <strong><?php echo htmlspecialchars($_SESSION["user"]); ?></strong>
-                <span>@<?php echo htmlspecialchars($_SESSION["user"]); ?></span>
-                <textarea name="comment_text" placeholder="Post your reply" required autocomplete="off"></textarea>
-            </label>
-            <input type="hidden" name="post_id" id="commentPostId">
-            <button name="post_comment">Post</button>
-        </form>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="post">No posts yet.</p>
+                    <?php endif; ?>
+                </div>
     </div>
-</div>
+
+    <!-- COMMENT POPUP -->
+    <div id="commentPopup" class="commentPopup" style="display: none;">
+        <div class="commentPopupContent">
+            <span class="closePopup"><i class="fa-solid fa-x"></i></span>
+            <form action="post.php" class="commentForm" method="POST">
+                <label class="commentPro">
+                    <img src="<?php echo htmlspecialchars($_SESSION["profile_picture"]); ?>" alt="">
+                    <strong><?php echo htmlspecialchars($_SESSION["user"]); ?></strong>
+                    <span>@<?php echo htmlspecialchars($_SESSION["user"]); ?></span>
+                    <textarea name="comment_text" placeholder="Post your reply" required autocomplete="off"></textarea>
+                </label>
+                <input type="hidden" name="post_id" id="commentPostId">
+                <button name="post_comment">Post</button>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>

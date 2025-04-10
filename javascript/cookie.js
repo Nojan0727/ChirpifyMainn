@@ -14,6 +14,7 @@ function acceptCookies() {
 
     if (document.cookie.includes("cookie_consent=accepted")) {
         console.log("Cookie was set successfully!");
+        location.href = "index.php";
     } else {
         console.log("Failed to set cookie.");
     }

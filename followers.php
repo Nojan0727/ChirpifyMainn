@@ -72,7 +72,7 @@ $current_user = $_SESSION['user'];
         </li>
     </ul>
 </nav>
-<div class="body">
+<div class="mid">
     <div class="followingList">
         <?php if (!empty($following)): ?>
             <ul>

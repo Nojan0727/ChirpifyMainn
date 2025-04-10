@@ -3,6 +3,10 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
 .videoBackground {
     position: fixed;
 
@@ -150,13 +154,22 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 .cont{
-
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Orbitron, sans-serif;
     position: relative;
-    top: -1em; left: 13em;
-    border-radius: 10px;
+    top: 0.5em;
+    left: 0.2em;
     text-align: center;
-    width: 650px;
+    width: 100%;
+    max-width: 150%;
+    overflow: hidden;
+    overflow-x: auto;
+    font-size: clamp(5rem, 2vw, 5rem);
+    font-weight: 800;
+    background: linear-gradient(to left, #30313e, #353739, rgb(53, 55, 57));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
 }
 .container {
     position: relative;
@@ -527,16 +540,17 @@ p a:hover {
     color: rgb(160, 159, 159);
 }
 
-.body {
+.mid {
     position: relative;
     margin-top: 60px;
-    margin-left:269px ;
+    margin-left:0;
     left: 350px;
-    height: 100%;
+    height: 100dvh;
     width:580px ;
     border-right: 1px solid rgb(70, 70, 70);
     border-left: 1px solid rgb(70, 70, 70);
-    transition: 1s ease-out;
+    overflow: scroll;
+
 }
 
 .happening {
@@ -1396,10 +1410,10 @@ p a:hover {
     background-color: #fff;
     width: 500px;
     max-width: 90%;
-    margin: 100px auto;
+    margin: 30em 30em;
     padding: 20px;
     border-radius: 10px;
-    position: relative;
+    position: fixed;
 }
 
 .closePopup {
