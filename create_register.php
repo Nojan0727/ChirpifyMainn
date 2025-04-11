@@ -66,15 +66,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         } else {
                             $error = "Error retrieving user after registration.";
                         }
-                        }
+                    }
+                } catch (PDOException $e) {
+                    $error = "Database error: " . $e->getMessage();
                 }
-                 catch (PDOException $e) {
-                $error = "Database error: " . $e->getMessage();
-            }
             } else {
-            $error = "Error uploading profile picture.";
+                $error = "Error uploading profile picture.";
+            }
         }
     }
-}
 }
 ?>

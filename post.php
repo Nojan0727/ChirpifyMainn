@@ -19,7 +19,7 @@ file_put_contents('debug.log', "Accessing " . basename($_SERVER['PHP_SELF']) . "
         <li><a href="#"><img class="chirpifyLogo" src="Image/Chripify.png" alt=""> <h3>Chirpify</h3></a></li>
     </div>
     <div class="middleHeader">
-       
+
         <form action="followers.php" method="GET" style="display: inline;">
             <button type="submit" name="type" value="">Following</button>
         </form>
@@ -97,7 +97,6 @@ file_put_contents('debug.log', "Accessing " . basename($_SERVER['PHP_SELF']) . "
                             <img src="<?php echo htmlspecialchars($post['images']); ?>" alt="Image" style="max-width: 500px; border-radius: 15px; min-width: 500px; max-height: 300px; object-fit: cover; object-position: center;">
                         <?php endif; ?>
                     </p>
-                    <small class="date">Posted on: <?php echo date('M j, Y', strtotime($post['post_created_at'])); ?></small>
                     <p class="likes">
                         <?php
                         $stmt = $conn->prepare("SELECT * FROM likes WHERE user_id = :user_id AND post_id = :post_id");

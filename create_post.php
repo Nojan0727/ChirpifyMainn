@@ -1,12 +1,11 @@
 <?php
+global $conn;
 session_start();
 require "database/database.php";
 
 if (!isset($_SESSION['user']) || !isset($_SESSION['id'])) {
-    if (basename($_SERVER['PHP_SELF']) !== 'index.php') {
-        header("Location: index.php");
-        exit();
-    }
+    header("Location: index.php");
+    exit();
 }
 
 $upload_dir = "assets/uploads/";
@@ -80,6 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_post'], $_POST['
         exit();
     }
 
+    $stmt = $conn->prepare("SELECT id FROM users WHERE id = :user_id");
+    $stmt->execute([':user_id' => $user_id]);
+    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+        $error = "Invalid user ID.";
+        header("Location: post.php");
+        exit();
+    }
+
     $stmt = $conn->prepare("SELECT * FROM likes WHERE user_id = :user_id AND post_id = :post_id");
     $stmt->execute([':user_id' => $user_id, ':post_id' => $post_id]);
     $like = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -104,11 +111,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_post'], $_POST['
     exit();
 }
 
-// === retrieve posts ===
+// === POSTS ===
 $stmt = $conn->prepare("SELECT posts.*, users.username, users.profile_picture 
-  FROM posts 
-  JOIN users ON posts.user_id = users.id 
-  ORDER BY posts.post_created_at DESC");
+                        FROM posts 
+                        JOIN users ON posts.user_id = users.id 
+                        ORDER BY posts.post_created_at DESC");
 $stmt->execute();
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

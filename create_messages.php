@@ -4,10 +4,8 @@ session_start();
 require "database/database.php";
 
 if (!isset($_SESSION['user']) || !isset($_SESSION['id'])) {
-    if (basename($_SERVER['PHP_SELF']) !== 'index.php') {
-        header("Location: index.php");
-        exit();
-    }
+    header("Location: index.php");
+    exit();
 }
 
 // show all the users
@@ -16,14 +14,15 @@ $stmt->execute([':current_user_id' => $_SESSION['id']]);
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // selecting user for sending messages
-// sending messages to other user
 $selected_user_id = null;
 $messages = [];
 if (isset($_GET['user_id'])) {
     $selected_user_id = (int)$_GET['user_id'];
+
+    // sending messages to other user
     $stmt = $conn->prepare("
         SELECT messages.*, users.username, users.profile_picture 
-        FROM messages  
+        FROM messages 
         JOIN users ON users.id = messages.sender_id 
         WHERE (messages.sender_id = :current_user_id AND messages.recipient_id = :selected_user_id) 
            OR (messages.sender_id = :selected_user_id AND messages.recipient_id = :current_user_id) 

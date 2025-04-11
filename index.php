@@ -1,6 +1,7 @@
 <?php
 require "create_index.php";
-?>
+
+    ?>
     <!doctype html>
     <html lang="en">
     <head>
@@ -43,7 +44,6 @@ require "create_index.php";
         </video>
         <h1 class="cont">Chirpify, Where Creativity Meets the Web
             <link href="https://fonts.googleapis.com/css2?family=Neue&family=Orbitron:wght@700&family=Rubik+Mono+One&display=swap" rel="stylesheet"></h1>
-
         <div class="container">
             <h2>Login</h2>
             <?php if (isset($error)): ?>
@@ -55,7 +55,7 @@ require "create_index.php";
                 <input type="text" name="username" id="username" placeholder="Username" required>
 
                 <label for="password">Password:</label>
-                <input type="password" name="password" id="password" placeholder="Password" required autocomplete="off">
+                <input type="password" name="password" id="password" placeholder="Password" required>
 
                 <input type="submit" name="submit" value="Log In">
             </form>
