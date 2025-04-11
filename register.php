@@ -13,7 +13,7 @@ require "create_register.php";
 <video class="videoBackground" autoplay muted loop>
     <source src="assets/image/background.mp4" type="video/mp4">
 </video>
-<div class="container">
+<div class="register">
     <h2>Create an account</h2>
     <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
     <form action="" method="POST" enctype="multipart/form-data">

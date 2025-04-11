@@ -1,6 +1,5 @@
 <?php
 session_start();
-require "database/database.php";
 
 if (!isset($_SESSION['user']) || !isset($_SESSION['id'])) {
     header("Location: index.php");
@@ -44,7 +43,6 @@ $current_user = $_SESSION['user'];
             <label>
                 <input type="text" name="query" style="color: white;" placeholder="Looking for something?">
             </label>
-            <button class="searchButton" type="submit">Search</button>
         </form>
         <?php if (isset($_GET['query'])): ?>
             <p class="searchQuery">You searched for: <strong><?php echo htmlspecialchars($_GET['query']); ?></strong></p>
@@ -72,7 +70,7 @@ $current_user = $_SESSION['user'];
         </li>
     </ul>
 </nav>
-<div class="body">
+<div class="mid">
     <div class="followingList">
         <?php if (!empty($following)): ?>
             <ul>
