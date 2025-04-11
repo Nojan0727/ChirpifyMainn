@@ -15,60 +15,49 @@ file_put_contents('debug.log', "Accessing " . basename($_SERVER['PHP_SELF']) . "
 </head>
 <body>
 <div class="header">
-    <div class="leftHeader">
-        <li><a href="#"><img class="chirpifyLogo" src="Image/Chripify.png" alt=""> <h3>Chirpify</h3></a></li>
-    </div>
-    <div class="middleHeader">
-
-        <form action="followers.php" method="GET" style="display: inline;">
-            <button type="submit" name="type" value="">Following</button>
-        </form>
-    </div>
-    <div class="rightHeader">
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
-            <label>
-                <input type="text" name="search" style="" placeholder="Looking for something?">
-            </label>
-            <button class="searchButton" type="submit">Search</button>
-        </form>
-    </div>
+    <!-- Empty header as per the updated layout -->
 </div>
-<nav class="navBar">
-    <ul>
-        <li><a href="post.php"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
-        <li><a href="construction.php"><i class="fas fa-search"></i> <span>Search</span></a></li>
-        <li><a href="construction.php"><i class="fa-regular fa-compass"></i> <span>Explore</span></a></li>
-        <li><a href="message.php"><i class="fa-regular fa-bell"></i> <span>Messages</span></a></li>
-        <li><a href="construction.php"><i class="fa-regular fa-envelope"></i> <span>Notification</span></a></li>
-        <li><a href="construction.php"><i class="fa-regular fa-square-plus"></i> <span>Create</span></a></li>
-        <li><a href="profile.php"><i class="fa-regular fa-user"></i> <span>Profile</span></a></li>
-        <li class="down"><a href="construction.php"><i class="fas fa-crown"></i><span>Premium</span></a></li>
-        <li class="down"><a href="construction.php"><i class="fa fa-bars"></i><span>More</span></a></li>
-        <li class="down"><a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
-        <li class="underPro">
-            <a href="profile.php">
-                <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="">
-                <p><?php echo htmlspecialchars($_SESSION['user']); ?></p>
-                <span>@<?php echo htmlspecialchars($_SESSION['user']); ?></span>
-            </a>
-        </li>
-    </ul>
-</nav>
-<div class="mid">
-    <div class="happening">
-        <?php if (isset($error)): ?>
-            <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
-        <?php endif; ?>
-        <img class="profileImg" src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="Profile Picture">
-        <form class="form" action="" method="post" enctype="multipart/form-data">
-            <label class="happeningLabel">
-                <textarea name="post_text" placeholder="What's Happening!?" required></textarea>
-            </label>
-            <input type="file" name="image" accept="image/*">
-            <button type="submit" name="create_post">Post!</button>
-        </form>
-        <div style="position: relative; border-bottom: 1px solid rgb(70, 70, 70); height: 0;">
-            <h2 class="recentPost">Recent Posts</h2>
+<div class="body">
+    <nav class="navBar">
+        <div class="leftHeader">
+            <li><a href="#"><h3>Chirpify</h3></a></li>
+        </div>
+        <ul>
+            <li><a href="post.php"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
+            <li><a href="construction.php"><i class="fas fa-search"></i> <span>Search</span></a></li>
+            <li><a href="construction.php"><i class="fa-regular fa-compass"></i> <span>Explore</span></a></li>
+            <li><a href="message.php"><i class="fa-regular fa-bell"></i> <span>Messages</span></a></li>
+            <li><a href="construction.php"><i class="fa-regular fa-envelope"></i> <span>Notification</span></a></li>
+            <li><a href="construction.php"><i class="fa-regular fa-square-plus"></i> <span>Create</span></a></li>
+            <li><a href="profile.php"><i class="fa-regular fa-user"></i> <span>Profile</span></a></li>
+            <li class="down"><a href="construction.php"><i class="fas fa-crown"></i><span>Premium</span></a></li>
+            <li class="down"><a href="construction.php"><i class="fa fa-bars"></i><span>More</span></a></li>
+            <li class="down"><a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></a></li>
+            <li class="underPro">
+                <a href="profile.php">
+                    <img src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="">
+                    <p><?php echo htmlspecialchars($_SESSION['user']); ?></p>
+                    <span>@<?php echo htmlspecialchars($_SESSION['user']); ?></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="middleHeader">
+        <div class="happening">
+            <form action="followers.php" method="GET" style="display: inline;">
+                <button type="submit" name="type" value="">Following</button>
+            </form>
+            <?php if (isset($error)): ?>
+                <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+            <?php endif; ?>
+            <img class="profileImg" src="<?php echo htmlspecialchars($_SESSION['profile_picture']); ?>" alt="Profile Picture">
+            <form class="form" action="" method="post" enctype="multipart/form-data">
+                <label class="happening">
+                    <textarea name="post_text" placeholder="What's Happening!?" required></textarea>
+                </label>
+                <input type="file" name="image" accept="image/*">
+                <button type="submit" name="create_post">Post!</button>
+            </form>
         </div>
         <?php if (!empty($search_results)): ?>
             <?php foreach ($search_results as $result): ?>
@@ -117,12 +106,11 @@ file_put_contents('debug.log', "Accessing " . basename($_SERVER['PHP_SELF']) . "
                             </form>
                         </span>
                         <span class="commentBlock">
-    <span class="commentTrigger" data-post-id="<?php echo $post['id']; ?>">
-        <i class="fa-solid fa-comment"></i>
-    </span>
-</span>
+                            <span class="commentTrigger" data-post-id="<?php echo $post['id']; ?>">
+                                <i class="fa-solid fa-comment"></i>
+                            </span>
+                        </span>
                     </p>
-
                     <?php
                     $stmt = $conn->prepare("SELECT comments.*, users.username, users.profile_picture
                         FROM comments
@@ -146,30 +134,37 @@ file_put_contents('debug.log', "Accessing " . basename($_SERVER['PHP_SELF']) . "
                             </div>
                         <?php endforeach; ?>
                     </div>
-
-                    <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="post">No posts yet.</p>
-                    <?php endif; ?>
                 </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="post">No posts yet.</p>
+        <?php endif; ?>
     </div>
+    <div class="rightHeader">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="GET">
+            <label>
+                <input type="text" name="search" placeholder="Looking for something?">
+            </label>
+        </form>
+    </div>
+</div>
 
-    <!-- COMMENT POPUP -->
-    <div id="commentPopup" class="commentPopup" style="display: none;">
-        <div class="commentPopupContent">
-            <span class="closePopup"><i class="fa-solid fa-x"></i></span>
-            <form action="post.php" class="commentForm" method="POST">
-                <label class="commentPro">
-                    <img src="<?php echo htmlspecialchars($_SESSION["profile_picture"]); ?>" alt="">
-                    <strong><?php echo htmlspecialchars($_SESSION["user"]); ?></strong>
-                    <span>@<?php echo htmlspecialchars($_SESSION["user"]); ?></span>
-                    <textarea name="comment_text" placeholder="Post your reply" required autocomplete="off"></textarea>
-                </label>
-                <input type="hidden" name="post_id" id="commentPostId">
-                <button name="post_comment">Post</button>
-            </form>
-        </div>
+<!-- Comment popup -->
+<div id="commentPopup" class="commentPopup" style="display: none;">
+    <div class="commentPopupContent">
+        <span class="closePopup"><i class="fa-solid fa-x"></i></span>
+        <form action="post.php" class="commentForm" method="POST">
+            <label class="commentPro">
+                <img src="<?php echo htmlspecialchars($_SESSION["profile_picture"]); ?>" alt="">
+                <strong><?php echo htmlspecialchars($_SESSION["user"]); ?></strong>
+                <span>@<?php echo htmlspecialchars($_SESSION["user"]); ?></span>
+                <textarea name="comment_text" placeholder="Post your reply" required autocomplete="off"></textarea>
+            </label>
+            <input type="hidden" name="post_id" id="commentPostId">
+            <button name="post_comment">Post</button>
+        </form>
     </div>
+</div>
 
 </body>
 </html>

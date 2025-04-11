@@ -31,7 +31,6 @@ require"create_messages.php";
             <label>
                 <input type="text" name="search" style="" placeholder="Looking for something?">
             </label>
-            <button class="searchButton" type="submit">Search</button>
         </form>
     </div>
 </div>
