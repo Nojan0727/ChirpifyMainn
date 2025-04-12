@@ -46,6 +46,7 @@ body.indx {
 
 /* Video Background */
 .videoContaine {
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,12 +63,12 @@ body.indx {
     /* Login and Registration Form */
 
 }
-.chirpifylogForm {
+.chirpifyregForm{
     position: absolute;
     width: 100%;
     max-width: 400px;
     margin: 20px auto;
-    background: rgba(240, 240, 240, 0.9);
+    background: rgba(78, 78, 78, 0);
     backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 8px;
@@ -84,8 +85,109 @@ body.indx {
     }
 }
 
+.chirpifyregForm h2.log {
+    font-size: 2rem;
+    color: #63BDB5;
+    margin-bottom: 1rem;
+}
 
+.chirpifyregForm p {
+    font-size: 1em;
+    color: #000;
+    margin-bottom: 15px;
+}
 
+.chirpifyregForm .error {
+    color: red;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.chirpifyregForm label {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.chirpifyregForm input{
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.chirpifyregForm input[type="submit"] {
+    background-color: #63BDB5;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.chirpifyregForm button.chirpify-post-button {
+    padding: 1rem;
+    background-color: #63BDB5;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.chirpifyregForm button.chirpify-post-button:hover,
+.chirpifyregForm input[type="submit"]:hover {
+    background-color: #4fa49a;
+}
+
+.chirpifyregForm .register-link,
+.chirpifyregForm .login-link {
+    font-size: 1rem;
+    color: #fbfbfb;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.chirpifyregForm .register-link a,
+.chirpifyregForm .login-link a {
+    color: #63BDB5;
+    text-decoration: none;
+}
+
+.chirpifyregForm .register-link a:hover,
+.chirpifyregForm .login-link a:hover {
+    text-decoration: underline;
+}
+
+.chirpifyregForm a {
+    color: lightblue;
+    text-decoration: none;
+}
+
+.chirpifyregFormForm a:hover {
+    color: #b3e0ff;
+}
+
+.chirpifylogForm {
+    position: absolute;
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    background: rgba(78, 78, 78, 0);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 1em 0.1em rgba(255, 255, 255, 0.2);
+    text-align: center;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    h2 {
+        font-size: 1.8em;
+        color: #15696F;
+        margin-bottom: 15px;
+    }
+}
 .chirpifylogForm h2.log {
     font-size: 2rem;
     color: #63BDB5;

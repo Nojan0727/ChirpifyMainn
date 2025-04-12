@@ -18,7 +18,7 @@ require "create_register.php";
         <h1 class="cont">Chirpify, Where Creativity Meets the Web
             <link href="https://fonts.googleapis.com/css2?family=Neue&family=Orbitron:wght@700&family=Rubik+Mono+One&display=swap" rel="stylesheet">
         </h1>
-        <div class="chirpifylogForm">
+        <div class="chirpifyregForm">
 
             <h2 class="log">Create an Account</h2>
             <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
