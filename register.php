@@ -10,7 +10,7 @@ require "create_register.php";
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<div class="chirpify-body">
+<div class="chirpify-body register-container">
     <div class="videoContaine">
         <video class="videoBackground" autoplay muted loop playsinline>
             <source src="assets/image/background.mp4" type="video/mp4">
