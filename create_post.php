@@ -119,25 +119,6 @@ $stmt = $conn->prepare("SELECT posts.*, users.username, users.profile_picture
 $stmt->execute();
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// === retrieve comments ===
-$comments_by_post = [];
-if (!empty($posts)) {
-    $post_ids = array_column($posts, 'id');
-    $in_placeholders = implode(',', array_fill(0, count($post_ids), '?'));
-
-    $stmt = $conn->prepare("SELECT comments.*, users.username 
-                            FROM comments 
-                            JOIN users ON comments.user_id = users.id 
-                            WHERE comments.post_id IN ($in_placeholders)
-                            ORDER BY comments.comment_posted_at ASC");
-    $stmt->execute($post_ids);
-    $all_comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach ($all_comments as $comment) {
-        $comments_by_post[$comment['post_id']][] = $comment;
-    }
-}
-
 // === USER SEARCH FEATURE ===
 $search_results = [];
 if ($_SERVER["REQUEST_METHOD"] == "GET" && !empty($_GET['search'])) {
