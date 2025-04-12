@@ -28,6 +28,8 @@ body.indx {
 /* Header Title (.cont) */
 .cont {
     font-family: Orbitron, sans-serif;
+    position: absolute;
+    top: 10%;
     text-align: center;
     width: 100%;
     max-width: 100%;
@@ -48,8 +50,7 @@ body.indx {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: -2;
-
+    /*z-index: -2;*/
 }
 
 .videoBackground {

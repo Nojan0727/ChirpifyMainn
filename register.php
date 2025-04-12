@@ -15,7 +15,11 @@ require "create_register.php";
         <video class="videoBackground" autoplay muted loop playsinline>
             <source src="assets/image/background.mp4" type="video/mp4">
         </video>
+        <h1 class="cont">Chirpify, Where Creativity Meets the Web
+            <link href="https://fonts.googleapis.com/css2?family=Neue&family=Orbitron:wght@700&family=Rubik+Mono+One&display=swap" rel="stylesheet">
+        </h1>
         <div class="chirpifylogForm">
+
             <h2 class="log">Create an Account</h2>
             <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
             <form class="registrationForm" action="" method="POST" enctype="multipart/form-data">
