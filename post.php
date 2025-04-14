@@ -120,7 +120,7 @@ require "create_post.php";
                                         <div class="admin">Creator</div>
                                     <?php endif; ?>
                                     <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
-                                    <small class="date">Commented on: <?php echo date('M j, Y', strtotime($comment['comment_posted_at'])); ?></small>
+                                    <small class="date">Commented on: <?php echo date('M d, Y', strtotime($comment['comment_posted_at'])); ?></small>
                                 </div>
                             </div>
                         <?php endforeach; ?>

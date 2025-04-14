@@ -42,7 +42,7 @@ require "create_messages.php";
         <div class="messageForm">
             <h2>Messages</h2>
             <?php foreach ($users as $user): ?>
-                <div class="userItem messageTrigger" data-user-id="<?php echo $user['id']; ?>" onclick="openMessagePopup(<?php echo $user['id']; ?>)">
+                <div class="userItem messageTrigger" data-user-id="<?php echo $user['id']; ?>">
                     <img class="userProfilePic" src="<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Picture">
                     <span>@<?php echo htmlspecialchars($user['username']); ?></span>
                 </div>
