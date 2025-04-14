@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Reposts (no repost functionality in HTML, kept for compatibility)
+    // Reposts
     document.querySelectorAll('.repost-icon').forEach(icon => {
         icon.addEventListener('click', function (e) {
             e.preventDefault();

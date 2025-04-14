@@ -34,14 +34,14 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deletePost'])) {
     $post_id = (int)$_POST['deletePost'];
 
-    // Verify the post belongs to the current user before deleting
+    // check the post user wanna delete belong to the user or other user
     $stmt = $conn->prepare("SELECT user_id FROM posts WHERE id = :post_id");
     $stmt->execute([':post_id' => $post_id]);
     $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($post && $post['user_id'] == $_SESSION['id']) {
         try {
-            // Delete associated comments and likes first
+
             $stmt = $conn->prepare("DELETE FROM posts WHERE id = :post_id");
             $stmt->execute([':post_id' => $post_id]);
             header("Location: profile.php");

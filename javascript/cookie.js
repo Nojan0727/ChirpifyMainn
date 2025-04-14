@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Cookie JavaScript Loaded!");
 
-    // Check if cookie consent is already set
+    // if cookie is set
     if (!document.cookie.includes("cookie_consent")) {
         document.getElementById("cookieBox").style.display = "block";
         document.getElementById("cookieOverlay").style.display = "block";
@@ -28,7 +28,7 @@ function rejectCookies() {
     console.log("Reject button clicked!");
 
     document.cookie = "cookie_consent=rejected; path=/; max-age=" + (60);
-    window.location.href = "https://www.google.com";
+   location.href = "index.php";
 }
 
 function toggleTerms() {

@@ -22,7 +22,7 @@ body {
 
 body.indx {
     font-family: Arial, sans-serif;
-    background-color: #1e1e1e;
+
 }
 
 /* Header Title (.cont) */
@@ -59,15 +59,13 @@ body.indx {
     height: 100%;
     object-fit: cover;
     z-index: -3;
-
-    /* Login and Registration Form */
-
 }
+/* Login and Registration Form */
 .chirpifyregForm{
     position: absolute;
     width: 100%;
     max-width: 400px;
-    margin: 20px auto;
+   margin-top: 15em;
     background: rgba(78, 78, 78, 0);
     backdrop-filter: blur(10px);
     padding: 20px;
@@ -121,6 +119,7 @@ body.indx {
     color: white;
     border: none;
     cursor: pointer;
+    margin: 0.5rem auto;
 }
 
 .chirpifyregForm button.chirpify-post-button {
@@ -171,7 +170,7 @@ body.indx {
     position: absolute;
     width: 100%;
     max-width: 400px;
-    margin: 20px auto;
+    margin-top: 10em;
     background: rgba(78, 78, 78, 0);
     backdrop-filter: blur(10px);
     padding: 20px;
@@ -235,6 +234,7 @@ body.indx {
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 4px;
 }
 
 .chirpifylogForm button.chirpify-post-button:hover,
@@ -753,12 +753,9 @@ span {
     color: #f4212e;
     cursor: pointer;
     font-size: 14px;
-    margin-top: 10px;
+    margin-top: 3px;
 }
 
-.deleteBtn:hover {
-    color: #d11a25;
-}
 
 /* Followers List */
 .follow-list {
@@ -1213,4 +1210,39 @@ span {
     .messagePopupContent {
         max-width: 90%;
     }
+}
+.adminBody {
+    font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: #fff;
+    padding: 2rem;
+}
+
+.admin-panel {
+    max-width: 800px;
+    margin: auto;
+    background: #2c2c2c;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 255, 200, 0.1);
+}
+
+.admin-panel h1 {
+    margin-bottom: 1.5rem;
+    color: #63BDB5;
+}
+
+.admin-actions a {
+    display: inline-block;
+    background: #63BDB5;
+    color: #1e1e1e;
+    padding: 0.75rem 1.2rem;
+    margin: 0.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.admin-actions a:hover {
+    background: #4fa49a;
 }

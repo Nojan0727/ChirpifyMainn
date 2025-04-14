@@ -3,7 +3,7 @@ global $conn;
 session_start();
 require "database/database.php";
 
-// Handle cookie
+// handle cookie if accepted or rejected
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['cookie_consent'])) {
     $consent = $_POST['cookie_consent'];
     setcookie("cookie_consent", $consent, time() + (365 * 24 * 60 * 60), "/"); // 1 year expiry
@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['cookie_consent'])) {
     exit;
 }
 
-// Check if the user is already logged in
+// Check if the user is logged in
 if (isset($_SESSION['user']) && isset($_SESSION['id'])) {
     header("Location: post.php");
     exit();

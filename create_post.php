@@ -13,7 +13,7 @@ if (!is_dir($upload_dir)) {
     mkdir($upload_dir, 0777, true);
 }
 
-// === create post ===
+// create post
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_post']) && !empty($_POST['post_text'])) {
     $post_text = trim($_POST['post_text']);
     $image_path = "";
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_post']) && !em
     }
 }
 
-// === comment ===
+// comment
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_comment'], $_POST['post_id'], $_POST['comment_text'])) {
     $comment_posted_at = date('Y-m-d H:i:s');
     try {
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_comment'], $_POS
     }
 }
 
-// === likes ===
+// likes
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_post'], $_POST['post_id'])) {
     $post_id = (int)$_POST['post_id'];
     $user_id = $_SESSION['id'];
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like_post'], $_POST['
     exit();
 }
 
-// === POSTS ===
+//POSTS
 $stmt = $conn->prepare("SELECT posts.*, users.username, users.profile_picture 
                         FROM posts 
                         JOIN users ON posts.user_id = users.id 
@@ -119,7 +119,7 @@ $stmt = $conn->prepare("SELECT posts.*, users.username, users.profile_picture
 $stmt->execute();
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// === USER SEARCH FEATURE ===
+// USER SEARCH
 $search_results = [];
 if ($_SERVER["REQUEST_METHOD"] == "GET" && !empty($_GET['search'])) {
     $search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS);
